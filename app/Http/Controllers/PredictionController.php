@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Client\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
@@ -23,31 +25,36 @@ class PredictionController extends Controller
             $imageFile = $request->file('image');
             $imagePath = $imageFile->store('x-rays', 'public');
 
-            // Replace this with the URL of your actual Python prediction service
+            // Replace with your actual Python service URL
             $predictionServiceUrl = 'http://127.0.0.1:5001/predict';
 
-            // Send the image to the Python prediction service
             $response = Http::attach(
                 'image',
                 file_get_contents($imageFile->getRealPath()),
                 $imageFile->getClientOriginalName()
             )->post($predictionServiceUrl);
 
-            // Check if the request was successful
             if ($response->successful()) {
-                // Decode the JSON response from the Python service
                 $responseData = $response->json();
+                
+                $heatmapBase64 = trim($responseData['heatmap_image'] ?? '');
+                
+                // Store all necessary data in the session for the PDF report
+                session([
+                    'imagePath' => $imagePath,
+                    'heatmap_image' => $heatmapBase64,
+                    'predictionData' => [
+                        'predicted_class' => $responseData['predicted_class'] ?? 'N/A',
+                        'confidence' => $responseData['confidence'] ?? 0.0,
+                    ]
+                ]);
 
-                // Retrieve the prediction and heatmap data from the response
                 $predictionData = [
                     'predicted_class' => $responseData['predicted_class'] ?? 'N/A',
                     'confidence' => $responseData['confidence'] ?? 0.0,
-                    // Remove any potential whitespace/newlines from the base64 string
-                    'heatmap_image' => trim($responseData['heatmap_image'] ?? ''),
                 ];
 
-                // Create the full data URL in the controller to ensure it's clean
-                $heatmapDataUrl = 'data:image/jpeg;base64,' . $predictionData['heatmap_image'];
+                $heatmapDataUrl = 'data:image/jpeg;base64,' . $heatmapBase64;
 
                 return view('dental-ai', [
                     'prediction' => $predictionData,
@@ -62,4 +69,31 @@ class PredictionController extends Controller
             return redirect()->back()->withErrors(['error' => 'An error occurred: ' . $e->getMessage()]);
         }
     }
+
+    // New method to download the PDF report
+    public function downloadResultAsPdf()
+    {
+        // Retrieve all the necessary data from the session
+        $imagePath = session('imagePath');
+        $base64Image = session('heatmap_image');
+        $prediction = session('predictionData');
+        
+        if (!$imagePath || !$base64Image || !$prediction) {
+            return redirect()->back()->withErrors(['error' => 'No report data found. Please generate a prediction first.']);
+        }
+
+        // Create the heatmap data URL
+        $heatmapDataUrl = 'data:image/jpeg;base64,' . $base64Image;
+
+        // Load the view and pass the data
+        $pdf = Pdf::loadView('report', [
+            'prediction' => $prediction,
+            'imagePath' => $imagePath,
+            'heatmapDataUrl' => $heatmapDataUrl,
+        ]);
+
+        // Download the generated PDF with a custom filename
+        return $pdf->download('dental_ai_report.pdf');
+    }
+
 }

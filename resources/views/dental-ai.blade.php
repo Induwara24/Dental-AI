@@ -36,14 +36,14 @@
                 </div>
 
                 <div class="space-y-4">
-                    <button class="w-full bg-blue-500 text-white py-2 rounded-lg font-medium hover:bg-blue-600 transition-colors">
-                        <i class="fas fa-download mr-2"></i> Download Result
-                    </button>
-                    <a href="{{ route('home') }}" class="w-full block text-center bg-gray-200 text-gray-700 py-2 rounded-lg font-medium hover:bg-gray-300 transition-colors">
-                        <i class="fas fa-upload mr-2"></i> Upload Another Image
+                    <a href="{{ route('download.result.pdf') }}" class="btn btn-primary w-100">
+                        <i class="fas fa-file-pdf me-2"></i> Download as PDF
+                    </a>
+                    <a href="{{ route('home') }}" class="btn btn-secondary w-100">
+                        <i class="fas fa-upload me-2"></i> Upload Another Image
                     </a>
                 </div>
-            </div>
+                            </div>
 
             <div class="md:col-span-2 space-y-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
