@@ -1,35 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dental AI Diagnosis - Results</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .custom-shadow {
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
-        }
-    </style>
-</head>
-<body class="bg-gray-100">
+@extends('layouts.app')
 
-    <header class="bg-white custom-shadow p-4">
-        <div class="container mx-auto flex justify-between items-center">
-            <div class="flex items-center space-x-2">
-                <i class="fas fa-tooth text-blue-500 text-2xl"></i>
-                <a href="#" class="text-xl font-bold text-gray-800">Dental AI Diagnosis</a>
-            </div>
-            <nav>
-                <a href="{{ route('home') }}" class="text-gray-600 hover:text-blue-500 px-3 py-2 rounded-md font-medium">Home</a>
-                <a href="#" class="text-gray-600 hover:text-blue-500 px-3 py-2 rounded-md font-medium">About</a>
-                <a href="#" class="text-white bg-blue-500 hover:bg-blue-600 px-3 py-2 rounded-md font-medium">Upload</a>
-                <a href="#" class="text-gray-600 hover:text-blue-500 px-3 py-2 rounded-md font-medium">Team</a>
-            </nav>
-        </div>
-    </header>
+@section('title', 'Diagnosis Results')
 
-    @if(isset($prediction))
+@section('content')
     <div class="container mx-auto mt-8 p-4">
         <div class="text-center mb-8">
             <h1 class="text-3xl font-bold text-gray-800">Analysis Results</h1>
@@ -106,19 +79,4 @@
             </div>
         </div>
     </div>
-    @else
-    <div class="container mx-auto mt-8 p-4">
-        <div class="alert alert-danger text-center bg-white p-6 rounded-lg custom-shadow">
-            <h4 class="text-xl font-semibold text-red-500">Error</h4>
-            @if($errors->has('error'))
-            <p class="text-gray-600">{{ $errors->first('error') }}</p>
-            @endif
-            <a href="{{ route('home') }}" class="mt-4 inline-block bg-blue-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-600 transition-colors">
-                <i class="fas fa-arrow-left mr-2"></i> Go Back
-            </a>
-        </div>
-    </div>
-    @endif
-
-</body>
-</html>
+@endsection
