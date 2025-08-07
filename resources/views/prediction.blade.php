@@ -23,6 +23,11 @@
         </div>
     </div>
 
+    <div id="loadingOverlay" class="loading-overlay" style="display:none;">
+        <div class="loading-spinner"></div>
+        <p class="mt-3">Analyzing X-ray, please wait...</p>
+    </div>
+
     <div class="container my-5">
         <h2 class="text-center mb-5">How It Works</h2>
         <div class="row g-4">
@@ -64,15 +69,45 @@
 @endsection
 
 @section('scripts')
-<script>
-    document.getElementById('upload-btn').addEventListener('click', function() {
-        document.getElementById('file-upload-input').click();
-    });
+    <script>
+        document.getElementById('upload-btn').addEventListener('click', function() {
+            document.getElementById('file-upload-input').click();
+        });
 
-    document.getElementById('file-upload-input').addEventListener('change', function() {
-        if (this.files && this.files[0]) {
-            document.getElementById('uploadForm').submit();
-        }
-    });
-</script>
+        document.getElementById('file-upload-input').addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                // Show the loading overlay
+                document.getElementById('loadingOverlay').style.display = 'flex';
+                // Submit the form
+                document.getElementById('uploadForm').submit();
+            }
+        });
+    </script>
+    <style>
+    .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(255, 255, 255, 0.9);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 1050; /* A high z-index to be on top of everything */
+    }
+    .loading-spinner {
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #3498db;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    </style>
 @endsection
