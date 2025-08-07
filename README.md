@@ -99,7 +99,7 @@ This project requires both a Laravel frontend-backend and a Python flask API. Fo
 3.  **Install Dependencies:** Install all the required Python libraries for the AI model and backend API (e.g., Flask, TensorFlow).
 
     ```bash
-    pip install tensorflow Flask Pillow
+    pip install tensorflow Flask Pillow numpy matplotlib
     ```
 
 4.  **Run the Backend Server:** Start the backend server, which will be running on `http://127.0.0.1:5001`.
