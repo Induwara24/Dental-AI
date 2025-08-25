@@ -21,7 +21,7 @@ The system accepts dental X-ray images, classifies them (e.g., "Cavity", "No Cav
 ## 🛠️ Technologies Used
 
 **Languages & Libraries**:
-- Python, JavaScript, HTML/CSS
+- Python, PHP, HTML/CSS
 
 **Data Processing**:
 - OpenCV, Pillow, NumPy, Pandas, matplotlib
